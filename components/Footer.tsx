@@ -1,6 +1,14 @@
 import React from 'react';
+import { useTransition } from './PixelTransition';
 
 const Footer: React.FC = () => {
+  const { navigate } = useTransition();
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, target: string) => {
+    e.preventDefault();
+    navigate(target);
+  };
+
   return (
     <footer className="py-12 bg-black border-t border-white/5">
       <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
@@ -12,9 +20,9 @@ const Footer: React.FC = () => {
         </div>
 
         <div className="flex gap-6 text-xs text-gray-500 font-medium">
-          <a href="#portfolio" className="hover:text-white transition-colors">Portfolio</a>
-          <a href="#process" className="hover:text-white transition-colors">Process</a>
-          <a href="#contact" className="hover:text-white transition-colors">Contact</a>
+          <a href="#portfolio" onClick={(e) => handleNavClick(e, '#portfolio')} className="hover:text-white transition-colors">Portfolio</a>
+          <a href="#process" onClick={(e) => handleNavClick(e, '#process')} className="hover:text-white transition-colors">Process</a>
+          <a href="#contact" onClick={(e) => handleNavClick(e, '#contact')} className="hover:text-white transition-colors">Contact</a>
         </div>
 
         <div className="text-xs text-gray-600">

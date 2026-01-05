@@ -1,6 +1,60 @@
-import React from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import { ArrowUpRight } from 'lucide-react';
+
+interface PortfolioItemProps {
+  item: { id: number; src: string; alt: string };
+}
+
+const PortfolioItem: React.FC<PortfolioItemProps> = ({ item }) => (
+  <div className="flex-shrink-0 w-[300px] md:w-[400px] aspect-video relative group rounded-xl overflow-hidden border border-white/10 bg-zinc-900 mx-3 cursor-none">
+    <img 
+      src={item.src} 
+      alt={item.alt} 
+      className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+    />
+    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+  </div>
+);
 
 const Portfolio: React.FC = () => {
+  const [skew, setSkew] = useState(0);
+  const containerRef = useRef<HTMLElement>(null);
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+  
+  // Velocity Skew Effect
+  useEffect(() => {
+    let lastScrollY = window.scrollY;
+    let rafId: number;
+    let currentSkew = 0;
+
+    const loop = () => {
+      const currentScrollY = window.scrollY;
+      const diff = currentScrollY - lastScrollY;
+      const targetSkew = diff * 0.15; // Sensitivity
+      
+      // Linear interpolation for smoothness
+      currentSkew = currentSkew * 0.9 + targetSkew * 0.1;
+      
+      setSkew(currentSkew);
+      lastScrollY = currentScrollY;
+      rafId = requestAnimationFrame(loop);
+    };
+
+    loop();
+    return () => cancelAnimationFrame(rafId);
+  }, []);
+
+  // Custom Cursor Logic
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!containerRef.current) return;
+    const rect = containerRef.current.getBoundingClientRect();
+    setCursorPos({
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top
+    });
+  };
+
   // Creating a larger array of placeholders for the slider
   const items = Array.from({ length: 8 }).map((_, i) => ({
     id: i,
@@ -14,21 +68,28 @@ const Portfolio: React.FC = () => {
     alt: `Thumbnail project ${i + 9}`
   }));
 
-  const PortfolioItem = ({ item }: { item: { id: number; src: string; alt: string } }) => (
-    <div className="flex-shrink-0 w-[300px] md:w-[400px] aspect-video relative group rounded-xl overflow-hidden border border-white/10 bg-zinc-900 mx-3 cursor-pointer">
-      <img 
-        src={item.src} 
-        alt={item.alt} 
-        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-      />
-      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-        <span className="px-4 py-2 border border-white/30 text-white rounded-full text-sm font-medium backdrop-blur-md">View Case Study</span>
-      </div>
-    </div>
-  );
-
   return (
-    <section id="portfolio" className="py-24 bg-black overflow-hidden">
+    <section 
+      id="portfolio" 
+      ref={containerRef}
+      className="py-24 bg-black overflow-hidden relative cursor-none"
+      onMouseEnter={() => setIsHovering(true)}
+      onMouseLeave={() => setIsHovering(false)}
+      onMouseMove={handleMouseMove}
+    >
+      {/* Custom Cursor Element */}
+      <div 
+        className="pointer-events-none absolute z-50 flex items-center justify-center bg-[#E50914] text-white rounded-full w-24 h-24 font-bold text-sm uppercase tracking-wider transition-opacity duration-200 mix-blend-difference"
+        style={{
+          left: cursorPos.x,
+          top: cursorPos.y,
+          transform: `translate(-50%, -50%) scale(${isHovering ? 1 : 0})`,
+          opacity: isHovering ? 1 : 0
+        }}
+      >
+        View <ArrowUpRight size={16} className="ml-1" />
+      </div>
+
       <div className="max-w-7xl mx-auto px-6 mb-12">
         <div className="text-center">
           <h2 className="text-3xl md:text-5xl font-bold mb-4">Take a look at what I'm capable of.</h2>
@@ -36,7 +97,10 @@ const Portfolio: React.FC = () => {
         </div>
       </div>
 
-      <div className="relative w-full space-y-8">
+      <div 
+        className="relative w-full space-y-8 transition-transform duration-100 ease-linear"
+        style={{ transform: `skewY(${skew}deg)` }}
+      >
         
         {/* Row 1 - Sliding Left */}
         <div className="flex w-full overflow-hidden mask-linear-fade">
