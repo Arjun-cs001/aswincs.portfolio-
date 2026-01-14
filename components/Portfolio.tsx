@@ -58,14 +58,20 @@ const Portfolio: React.FC = () => {
   // Creating a larger array of placeholders for the slider
   const items = Array.from({ length: 8 }).map((_, i) => ({
     id: i,
-    src: `https://picsum.photos/seed/${i + 55}/800/450`,
+    src: `https://picsum.photos/seed/${i + 45}/800/450`,
     alt: `Thumbnail project ${i + 1}`
   }));
 
   const itemsRow2 = Array.from({ length: 8 }).map((_, i) => ({
     id: i + 8,
-    src: `https://picsum.photos/seed/${i + 155}/800/450`,
+    src: `https://picsum.photos/seed/${i + 123}/800/450`,
     alt: `Thumbnail project ${i + 9}`
+  }));
+
+  const itemsRow3 = Array.from({ length: 8 }).map((_, i) => ({
+    id: i + 16,
+    src: `https://picsum.photos/seed/${i + 789}/800/450`,
+    alt: `Thumbnail project ${i + 17}`
   }));
 
   return (
@@ -125,6 +131,20 @@ const Portfolio: React.FC = () => {
             ))}
             {/* Duplicate Set for Loop */}
             {itemsRow2.map((item) => (
+              <PortfolioItem key={`dup-${item.id}`} item={item} />
+            ))}
+          </div>
+        </div>
+
+        {/* Row 3 - Sliding Left */}
+        <div className="flex w-full overflow-hidden mask-linear-fade">
+          <div className="flex animate-scroll pause-on-hover">
+            {/* Original Set */}
+            {itemsRow3.map((item) => (
+              <PortfolioItem key={item.id} item={item} />
+            ))}
+            {/* Duplicate Set for Loop */}
+            {itemsRow3.map((item) => (
               <PortfolioItem key={`dup-${item.id}`} item={item} />
             ))}
           </div>

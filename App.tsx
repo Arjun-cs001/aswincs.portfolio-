@@ -9,7 +9,6 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import ThumbnailGenerator from './components/ThumbnailGenerator';
 import ScrollReveal from './components/ScrollReveal';
-import RobotMascot from './components/RobotMascot';
 import { TransitionProvider } from './components/PixelTransition';
 
 function App() {
@@ -41,9 +40,6 @@ function App() {
           </ScrollReveal>
         </main>
         <Footer />
-        
-        {/* Floating AI Robot Mascot */}
-        <RobotMascot />
         
         {/* 
           This is an extra feature demonstrating Gemini API integration.

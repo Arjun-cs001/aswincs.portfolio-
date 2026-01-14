@@ -21,7 +21,6 @@ const RobotMascot: React.FC = () => {
       const screenHeight = window.innerHeight;
 
       // Configuration
-      // Reduced max rotation slightly because the new robot is wider (tools might clip or look flat)
       const maxRot = 15; 
       const maxMove = 25; 
 
@@ -51,12 +50,12 @@ const RobotMascot: React.FC = () => {
 
   return (
     <div 
-      className="fixed bottom-0 left-0 z-40 hidden lg:flex items-end justify-start pointer-events-none p-10 perspective-[1000px]"
+      className="fixed bottom-0 left-0 z-50 hidden md:flex items-end justify-start pointer-events-none p-4 perspective-[1000px]"
     >
+      {/* Mouse Interaction Wrapper */}
       <div
         ref={robotRef}
-        // Increased container size to w-72 h-72 to accommodate the floating tools around the robot
-        className="w-72 h-72 transition-transform duration-100 ease-out will-change-transform filter drop-shadow-[0_20px_40px_rgba(0,0,0,0.6)]"
+        className="w-[350px] transition-transform duration-100 ease-out will-change-transform mix-blend-screen"
         style={{
           transform: `
             translate3d(${transform.x}px, ${transform.y}px, 0) 
@@ -65,16 +64,26 @@ const RobotMascot: React.FC = () => {
           `
         }}
       >
-        <img 
-          src="/designer-robot.png" 
-          alt="Designer Robot Mascot" 
-          className="w-full h-full object-contain hover:scale-105 transition-transform duration-300"
-          onError={(e) => {
-            // Fallback to the generic robot if the file isn't present yet
-            e.currentTarget.src = "https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Robot.png";
-          }}
-        />
+        {/* Floating Animation Wrapper */}
+        <div className="w-full animate-[float-gentle_6s_ease-in-out_infinite]">
+          <video
+            src="https://res.cloudinary.com/dcnz8e0nz/video/upload/Untitled_1_oxxacg.mp4"
+            poster="https://res.cloudinary.com/dcnz8e0nz/image/upload/Untitled_1_oxxacg.png"
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-auto object-contain"
+          />
+        </div>
       </div>
+
+      <style>{`
+        @keyframes float-gentle {
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-15px); }
+        }
+      `}</style>
     </div>
   );
 };
